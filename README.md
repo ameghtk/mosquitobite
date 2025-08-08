@@ -1,34 +1,31 @@
 <img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
 
-# [Project Name] 🎯
+# [MOSQUITO BITE PREDICTOR] 🎯
 
 
 ## Basic Details
-### Team Name: [Name]
+### Team Name: [GALACTOSE]
 
 
 ### Team Members
-- Team Lead: [Name] - [College]
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Team Lead: [AMRUTHA] - [COLLEGE OF ENGINEERING PALAKKAD]
+- Member 1: [AMEGH T K] - [COLLEGE OF ENGINEERING PALAKKAD]
 
 ### Project Description
-[2-3 lines about what your project does]
+[Predict chances for getting mosquito bites based on certain factors.Factors selected for predicting the probability are blood group,climate,time of a day,colour of your cloth,body condition]
 
 ### The Problem (that doesn't exist)
-[What ridiculous problem are you solving?]
+[Probability of getting mosquito bites]
 
 ### The Solution (that nobody asked for)
-[How are you solving it? Keep it fun!]
+[We predicted the mosquito biting prbability by comparing each factors responsible for the bite!]
 
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- [Languages used]
-- [Frameworks used]
-- [Libraries used]
-- [Tools used]
+- [css,jaava script,html]
+- [web browser,Text editor]
 
 For Hardware:
 - [List main components]
@@ -38,10 +35,10 @@ For Hardware:
 ### Implementation
 For Software:
 # Installation
-[commands]
+[client-side web application to run localy ]
 
 # Run
-[commands]
+[Simply open index.html in any modern web browser]
 
 ### Project Documentation
 For Software:
@@ -88,9 +85,9 @@ For Hardware:
 [Add any extra demo materials/links]
 
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+- [Amrutha]: [idea generation]
+- [Amegh T.K]: []
+
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
