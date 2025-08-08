@@ -44,8 +44,9 @@ For Software:
 For Software:
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+<img width="3188" height="1202" alt="frame (3)" src="screenShots/Mosquito Bite Predictor 🦟 - Personal - Microsoft​ Edge 8_9_2025 2_18_34 AM.png" />
+<img width="3188" height="1202" alt="frame (3)" src="screenShots/amegh.html - amegh - Visual Studio Code 8_9_2025 2_18_02 AM.png" />
+<img width="3188" height="1202" alt="frame (3)" src="screenShots/amegh.html - amegh - Visual Studio Code 8_9_2025 2_18_13 AM.png" />
 
 ![Screenshot2](Add screenshot 2 here with proper name)
 *Add caption explaining what this shows*
