@@ -7,6 +7,9 @@
 ## Basic Details
 ### Team Name: [GALACTOSE]
 
+WEBSITE LINK 
+<a href="https://github.com/ameghtk/mosquitobite/blob/main/index.html">CLICK HERE</a>
+
 
 ### Team Members
 - Team Lead: [AMRUTHA] - [COLLEGE OF ENGINEERING PALAKKAD]
