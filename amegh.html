@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mosquito Bite Predictor 🦟</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --secondary: #fdd835;
+      --danger: #f44336;
+      --safe: #4caf50;
+      --warning: #ff9800;
+    }
+    
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Comic Neue', cursive;
+      background-color: #fff8e1;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 10% 20%, rgba(253, 216, 53, 0.1) 0%, rgba(255, 248, 225, 1) 90%);
+    }
+    
+    h1 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+      animation: fadeInDown 0.8s both;
+    }
+    
+    p.subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      animation: fadeIn 1s both 0.3s;
+    }
+    
+    .mosquito {
+      font-size: 3rem;
+      display: inline-block;
+      animation: 
+        buzz 0.5s infinite alternate,
+        bounceIn 1s both;
+    }
+    
+    @keyframes buzz {
+      0% { transform: translateX(-5px) rotate(-5deg); }
+      100% { transform: translateX(5px) rotate(5deg); }
+    }
+    
+    .selector-container {
+      perspective: 1000px;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+    
+    .selector {
+      display: block;
+      margin: 0 auto;
+      padding: 12px;
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+      font-family: inherit;
+      font-size: 1rem;
+      background: white;
+      transform-style: preserve-3d;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      animation: flipInX 0.8s both;
+    }
+    
+    .selector:hover {
+      transform: translateY(-3px) rotateX(10deg);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin: 25px 0;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s both 0.6s;
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+    }
+    
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+    }
+    
+    button::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: rgba(255,255,255,0.1);
+      transform: rotate(45deg);
+      transition: all 0.3s;
+    }
+    
+    button:hover::after {
+      left: 100%;
+    }
+    
+    #preview {
+      margin: 20px auto;
+      max-width: 300px;
+      border: 4px dashed var(--primary);
+      border-radius: 15px;
+      padding: 10px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      animation: zoomIn 0.8s both 0.4s;
+    }
+    
+    #preview img {
+      max-width: 100%;
+      border-radius: 10px;
+      display: block;
+    }
+    
+    #result {
+      font-size: 1.3rem;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 15px;
+      background: white;
+      max-width: 500px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s both;
+    }
+    
+    .fun-advice, .risk-factors {
+      padding: 20px;
+      border-radius: 15px;
+      margin: 25px auto;
+      max-width: 500px;
+      text-align: left;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s both;
+    }
+    
+    .fun-advice {
+      border-left: 5px solid var(--secondary);
+      background: linear-gradient(to right, #fff8e1 0%, white 50%);
+    }
+    
+    .risk-factors {
+      border-left: 5px solid var(--danger);
+      background: linear-gradient(to right, #ffebee 0%, white 50%);
+    }
+    
+    .emoji-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+    
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      animation: fall linear forwards;
+      z-index: 100;
+    }
+    
+    @keyframes fall {
+      to { transform: translateY(100vh); }
+    }
+    
+    .mosquito-swatter {
+      display: inline-block;
+      animation: swat 0.5s infinite alternate;
+      transform-origin: top right;
+    }
+    
+    @keyframes swat {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-30deg); }
+    }
+    
+    .chart-container {
+      width: 200px;
+      height: 200px;
+      margin: 30px auto;
+      position: relative;
+      animation: bounceIn 0.8s both 0.2s;
+    }
+    
+    .chart-percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    canvas {
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .warning-sign {
+      display: inline-block;
+      animation: pulse 1s infinite;
+      font-size: 1.5rem;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes flipInX {
+      from {
+        transform: perspective(400px) rotateX(90deg);
+        opacity: 0;
+      }
+      to {
+        transform: perspective(400px) rotateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes bounceIn {
+      from, 20%, 40%, 60%, 80%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+      }
+      0% {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+      }
+      20% {
+        transform: scale3d(1.1, 1.1, 1.1);
+      }
+      40% {
+        transform: scale3d(.9, .9, .9);
+      }
+      60% {
+        opacity: 1;
+        transform: scale3d(1.03, 1.03, 1.03);
+      }
+      80% {
+        transform: scale3d(.97, .97, .97);
+      }
+      to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+      }
+    }
+    
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .selector {
+        padding: 10px;
+      }
+      button {
+        padding: 12px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mosquito">🦟</div>
+  <h1>Mosquito Bite Predictor</h1>
+  <p class="subtitle">Find out how delicious you are to mosquitoes!</p>
+
+  <div class="selector-container">
+    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+    <button onclick="document.getElementById('fileInput').click()">📷 Upload Photo</button>
+  </div>
+
+  <div class="selector-container">
+    <select id="bloodGroup" class="selector">
+      <option value="">-- Blood Group --</option>
+      <option value="O">O</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="AB">AB</option>
+    </select>
+  </div>
+
+  <div class="selector-container">
+    <select id="clothColor" class="selector">
+      <option value="">-- Clothing Color --</option>
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+    </select>
+  </div>
+
+  <div class="selector-container">
+    <select id="bodyTemp" class="selector">
+      <option value="">-- How You Feel --</option>
+      <option value="normal">Normal</option>
+      <option value="warm">Warm</option>
+      <option value="hot">Hot/Feverish</option>
+    </select>
+  </div>
+
+  <div class="selector-container">
+    <select id="climate" class="selector">
+      <option value="">-- Climate --</option>
+      <option value="hot_humid">Hot & Humid</option>
+      <option value="hot_dry">Hot & Dry</option>
+      <option value="warm">Warm</option>
+      <option value="mild">Mild</option>
+      <option value="cool">Cool</option>
+    </select>
+  </div>
+
+  <div class="selector-container">
+    <select id="timeOfDay" class="selector">
+      <option value="">-- Time of Day --</option>
+      <option value="dawn">Dawn</option>
+      <option value="day">Day</option>
+      <option value="dusk">Dusk</option>
+      <option value="night">Night</option>
+    </select>
+  </div>
+
+  <div id="preview"></div>
+  
+  <div class="chart-container">
+    <canvas id="pieChart" width="200" height="200"></canvas>
+    <div class="chart-percentage" id="chartPercent">0%</div>
+  </div>
+  
+  <button onclick="predictBite()">Calculate My Risk</button>
+  <div id="result"></div>
+  <div id="funAdvice" class="fun-advice" style="display: none;"></div>
+  <div id="riskFactors" class="risk-factors" style="display: none;"></div>
+  <div id="emojiRain" class="emoji-rain"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Enhanced file upload with animation
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const preview = document.getElementById('preview');
+      preview.style.animation = 'none';
+      void preview.offsetWidth; // Trigger reflow
+      preview.style.animation = 'bounceIn 0.8s';
+      
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.style.animation = 'zoomIn 0.8s';
+        preview.innerHTML = '';
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Main prediction function with animations
+    function predictBite() {
+      const bloodGroup = document.getElementById('bloodGroup').value;
+      const clothColor = document.getElementById('clothColor').value;
+      const bodyTemp = document.getElementById('bodyTemp').value;
+      const climate = document.getElementById('climate').value;
+      const timeOfDay = document.getElementById('timeOfDay').value;
+      
+      if (!bloodGroup || !clothColor || !bodyTemp || !climate || !timeOfDay) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = "⚠️ Please fill all fields!";
+        resultDiv.style.animation = 'shake 0.5s';
+        setTimeout(() => resultDiv.style.animation = '', 500);
+        return;
+      }
+
+      // Show loading animation
+      const chartPercent = document.getElementById('chartPercent');
+      chartPercent.textContent = '...';
+      document.querySelector('.chart-container canvas').style.opacity = '0.5';
+      
+      // Calculate with slight delay for better UX
+      setTimeout(() => {
+        let risk = 50;
+        let riskFactors = [];
+        
+        // Blood group calculations
+        if (bloodGroup === "O") {
+          risk += 25;
+          riskFactors.push("Blood Type O (+25%) - Mosquitoes love your blood type!");
+        }
+        else if (bloodGroup === "A") {
+          risk -= 5;
+          riskFactors.push("Blood Type A (-5%) - Less attractive to mosquitoes");
+        }
+        else if (bloodGroup === "B") {
+          risk += 5;
+          riskFactors.push("Blood Type B (+5%) - Slightly more attractive");
+        }
+        else {
+          risk -= 10;
+          riskFactors.push("Blood Type AB (-10%) - Least favorite blood type for mosquitoes");
+        }
+        
+        // Clothing color calculations
+        if (clothColor === "dark") {
+          risk += 15;
+          riskFactors.push("Dark Clothing (+15%) - Mosquitoes spot you more easily");
+        }
+        else {
+          risk -= 10;
+          riskFactors.push("Light Clothing (-10%) - Harder for mosquitoes to see");
+        }
+        
+        // Body temperature calculations
+        if (bodyTemp === "warm") {
+          risk += 15;
+          riskFactors.push("Warm Body (+15%) - Your warmth attracts mosquitoes");
+        }
+        else if (bodyTemp === "hot") {
+          risk += 25;
+          riskFactors.push("Hot/Feverish (+25%) - Mosquitoes detect your heat signature easily");
+        }
+        else {
+          risk -= 5;
+          riskFactors.push("Normal Temperature (-5%) - Less noticeable to mosquitoes");
+        }
+        
+        // Climate calculations
+        if (climate === "hot_humid") {
+          risk += 30;
+          riskFactors.push("Hot & Humid Climate (+30%) - Perfect breeding conditions");
+        }
+        else if (climate === "hot_dry") {
+          risk += 20;
+          riskFactors.push("Hot & Dry Climate (+20%) - Mosquitoes are very active");
+        }
+        else if (climate === "warm") {
+          risk += 10;
+          riskFactors.push("Warm Climate (+10%) - Moderate mosquito activity");
+        }
+        else if (climate === "mild") {
+          risk -= 5;
+          riskFactors.push("Mild Climate (-5%) - Fewer mosquitoes around");
+        }
+        else {
+          risk -= 15;
+          riskFactors.push("Cool Climate (-15%) - Mosquitoes are less active");
+        }
+        
+        // Time of day calculations
+        if (timeOfDay === "dawn" || timeOfDay === "dusk") {
+          risk += 25;
+          riskFactors.push(`${timeOfDay === "dawn" ? "Dawn" : "Dusk"} (+25%) - Peak mosquito feeding time`);
+        }
+        else if (timeOfDay === "night") {
+          risk += 10;
+          riskFactors.push("Night (+10%) - Moderate mosquito activity");
+        }
+        else {
+          risk -= 15;
+          riskFactors.push("Day (-15%) - Mosquitoes are less active during daylight");
+        }
+        
+        // Random factor
+        const randomFactor = Math.floor(Math.random() * 20) - 10;
+        risk += randomFactor;
+        riskFactors.push(`Random Factor (${randomFactor >= 0 ? "+" : ""}${randomFactor}%) - Unpredictable conditions`);
+        
+        // Ensure risk is between 0-100
+        risk = Math.max(0, Math.min(100, Math.round(risk)));
+        
+        displayResult(risk, riskFactors);
+        updateChart(risk);
+      }, 800);
+    }
+
+    function displayResult(risk, riskFactors) {
+      const resultDiv = document.getElementById('result');
+      const funAdvice = document.getElementById('funAdvice');
+      const riskFactorsDiv = document.getElementById('riskFactors');
+      
+      // Reset animations
+      resultDiv.style.animation = 'fadeIn 0.8s';
+      funAdvice.style.animation = 'fadeInUp 0.8s';
+      riskFactorsDiv.style.animation = 'fadeInUp 0.8s';
+      
+      funAdvice.style.display = "block";
+      riskFactorsDiv.style.display = "block";
+      
+      // Display risk factors
+      riskFactorsDiv.innerHTML = `
+        <h3><span class="warning-sign">⚠️</span> Your Risk Factors:</h3>
+        <ul>
+          ${riskFactors.map(factor => `<li>${factor}</li>`).join('')}
+        </ul>
+      `;
+      
+      if (risk <= 20) {
+        resultDiv.innerHTML = `🟢 ${risk}% Risk - You're basically mosquito repellent!`;
+        funAdvice.innerHTML = `
+          <h3>🎉 Celebration Time!</h3>
+          <p>You're winning the mosquito war! Keep doing whatever you're doing.</p>
+          <ul>
+            <li>Wear whatever you want - mosquitoes don't care</li>
+            <li>You could probably bathe in sugar water and still be safe</li>
+          </ul>
+        `;
+        resultDiv.style.backgroundColor = '#e8f5e9';
+      } 
+      else if (risk <= 40) {
+        resultDiv.innerHTML = `🟢 ${risk}% Risk - Low mosquito interest`;
+        funAdvice.innerHTML = `
+          <h3>😎 Chill Defense</h3>
+          <p>Mosquitoes think you're just okay. Basic protection will do:</p>
+          <ul>
+            <li>Wear light colors - mosquitoes prefer goth fashion</li>
+            <li>Try saying "buzz off" - might work 10% of the time</li>
+            <li>Carry a mosquito BFF to distract the others</li>
+          </ul>
+        `;
+        resultDiv.style.backgroundColor = '#e8f5e9';
+      }
+      else if (risk <= 60) {
+        resultDiv.innerHTML = `🟡 ${risk}% Risk - Moderate mosquito attraction`;
+        funAdvice.innerHTML = `
+          <h3>🛡️ Defense Strategies</h3>
+          <p>Mosquitoes are swiping right on you. Time to step up:</p>
+          <ul>
+            <li>Apply repellent - mosquitoes hate eau de DEET</li>
+            <li>Wear long sleeves - unfashionable but effective</li>
+            <li class="mosquito-swatter">🏸 Practice your swatting technique</li>
+            <li>💨 Become a human fan - flap your arms wildly</li>
+          </ul>
+        `;
+        resultDiv.style.backgroundColor = '#fff8e1';
+      }
+      else if (risk <= 80) {
+        resultDiv.innerHTML = `🟠 ${risk}% Risk - High mosquito appeal!`;
+        funAdvice.innerHTML = `
+          <h3>🚨 Emergency Measures</h3>
+          <p>You're a mosquito magnet! Extreme measures needed:</p>
+          <ul>
+            <li>Wear permethrin-treated clothes - mosquito kryptonite</li>
+            <li>Consider bubble wrap suits - stylish AND functional</li>
+            <li>🛡️ Build a fort with mosquito net blankets</li>
+            <li>⚡ Play "The Mosquito" teen repellent sound on your phone</li>
+          </ul>
+        `;
+        resultDiv.style.backgroundColor = '#fff3e0';
+      }
+      else {
+        resultDiv.innerHTML = `🔴 ${risk}% Risk - MOSQUITO MAGNET ALERT!`;
+        funAdvice.innerHTML = `
+          <h3>🚑 Last Resort Ideas</h3>
+          <p>You're basically a walking juice box to mosquitoes:</p>
+          <ul>
+            <li>Consider moving to Antarctica - few mosquitoes there</li>
+            <li>Invest in a personal force field</li>
+            <li>🎭 Wear a beekeeper suit everywhere</li>
+            <li>🧪 Invent "Eau de Not Today Mosquitoes" perfume</li>
+          </ul>
+        `;
+        resultDiv.style.backgroundColor = '#ffebee';
+        startEmojiRain();
+      }
+    }
+
+    function updateChart(risk) {
+      const ctx = document.getElementById('pieChart').getContext('2d');
+      document.querySelector('.chart-container canvas').style.opacity = '1';
+      
+      // Destroy previous chart if it exists
+      if (window.myChart) {
+        window.myChart.destroy();
+      }
+      
+      document.getElementById('chartPercent').textContent = `${risk}%`;
+      
+      window.myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [risk, 100-risk],
+            backgroundColor: [
+              getRiskColor(risk),
+              '#eeeeee'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          cutout: '70%',
+          responsive: false,
+          events: [],
+          animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 1500
+          }
+        }
+      });
+    }
+
+    function getRiskColor(risk) {
+      if (risk > 80) return '#d32f2f';
+      if (risk > 60) return '#f57c00';
+      if (risk > 40) return '#fbc02d';
+      if (risk > 20) return '#7cb342';
+      return '#388e3c';
+    }
+
+    function startEmojiRain() {
+      const emojiRain = document.getElementById('emojiRain');
+      emojiRain.style.display = "block";
+      emojiRain.innerHTML = "";
+      
+      const emojis = ['🦟', '💉', '🩹', '😫', '🏃', '🧴'];
+      const count = 30;
+      
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const emoji = document.createElement("div");
+          emoji.className = "emoji";
+          emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+          emoji.style.left = Math.random() * 100 + "vw";
+          emoji.style.animationDuration = (Math.random() * 3 + 2) + "s";
+          emoji.style.opacity = Math.random() * 0.5 + 0.5;
+          emojiRain.appendChild(emoji);
+          
+          setTimeout(() => emoji.remove(), 5000);
+        }, i * 300);
+      }
+      
+      setTimeout(() => {
+        emojiRain.style.display = "none";
+      }, count * 300 + 5000);
+    }
+
+    // Add shake animation for errors
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
