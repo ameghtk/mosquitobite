@@ -8,7 +8,7 @@
 ### Team Name: [GALACTOSE]
 
 WEBSITE LINK 
-<a href="https://github.com/ameghtk/mosquitobite/blob/main/index.html">CLICK HERE</a>
+<a href="file:///C:/Users/user/Desktop/useless_project_temp/amegh.html">CLICK HERE</a>
 
 
 ### Team Members
